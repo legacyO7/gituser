@@ -26,12 +26,12 @@ gitverify;
 }
 
 init(){
-iofile=.sec/seed
+iofile=~/.sec/seed
 if [ -f "$iofile" ]; then
-    count=$(grep -o -i ::email .sec/seed | wc -l)
+    count=$(grep -o -i ::email $iofile | wc -l)
 else 
 count=0; 
-mkdir -p .sec
+mkdir -p ~/.sec
 fi
 
 }
@@ -55,8 +55,8 @@ then
 break;
 fi;
 
-echo "::username$count : $uname">>.sec/seed
-echo "::email$count : $email">>.sec/seed
+echo "::username$count : $uname">>$iofile
+echo "::email$count : $email">>$iofile
 printf '\nenter :q to exit\n';
 
 done
@@ -66,9 +66,9 @@ done
 readfrom(){
 if [[ "$count" > 0 ]];
 then    
-    for c in `seq 1 $(grep -o -i ::email .sec/seed | wc -l)`
+    for c in `seq 1 $(grep -o -i ::email $iofile | wc -l)`
     do
-    echo " $c - $(grep "::username$c" .sec/seed  | cut -d " " -f3)  ($(grep "::email$c" .sec/seed  | cut -d " " -f3)) ";
+    echo " $c - $(grep "::username$c" $iofile  | cut -d " " -f3)  ($(grep "::email$c" $iofile  | cut -d " " -f3)) ";
     echo "---------------------------------------------------";
     done
 fi;
@@ -86,15 +86,15 @@ if [[ "$count" > 0 ]]; then
     if [[ "$eval" -gt 0 && "$eval" -le $c ]];
     then
     clear;
-    echo "Previous username   :    $(grep "::username$eval" .sec/seed  | cut -d " " -f3)";
+    echo "Previous username   :    $(grep "::username$eval" $iofile  | cut -d " " -f3)";
     printf %s "new username        :  ";
     read newval;
-    sed -i "s/$(grep "::username$eval" .sec/seed  | cut -d " " -f3)/$newval/" .sec/seed
+    sed -i "s/$(grep "::username$eval" $iofile  | cut -d " " -f3)/$newval/" $iofile
     
-    echo "Previous email      :    $(grep "::email$eval" .sec/seed  | cut -d " " -f3)";
+    echo "Previous email      :    $(grep "::email$eval" $iofile  | cut -d " " -f3)";
     printf %s "new emailID         :   ";
     read newval;
-    sed -i "s/$(grep "::email$eval" .sec/seed  | cut -d " " -f3)/$newval/" .sec/seed
+    sed -i "s/$(grep "::email$eval" $iofile  | cut -d " " -f3)/$newval/" $iofile
     
     fi;
     fi;
@@ -142,8 +142,8 @@ echo "pass 1";
     if [[ "$val" -gt 0 && "$val" -le $c ]];
     then
     echo "pass 2";
-    name=$(grep "::username$val" .sec/seed  | cut -d " " -f3);
-    email=$(grep "::email$val" .sec/seed  | cut -d " " -f3);
+    name=$(grep "::username$val" $iofile  | cut -d " " -f3);
+    email=$(grep "::email$val" $iofile  | cut -d " " -f3);
     gitexecute;
     else
     echo "$val $c";
