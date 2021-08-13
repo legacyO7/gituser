@@ -1,1 +1,4 @@
-chmod +x gituser.sh && ./gituser
+```
+chmod +x gituser.sh
+./gituser.sh
+```
